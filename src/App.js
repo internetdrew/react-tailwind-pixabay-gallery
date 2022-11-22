@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ImageCard from './components/ImageCard';
 
 function App() {
   const [images, setImages] = useState([]);
@@ -9,46 +10,29 @@ function App() {
     const res = await fetch(
       `https://pixabay.com/api/?key=${process.env.REACT_APP_PIXABAY_API_KEY}&q=${searchTerm}&image_type=photo&pretty=true`
     );
-    const { hits: images } = await res.json();
-    setImages(images);
+    const { hits } = await res.json();
+    setImages(hits);
     setIsLoading(false);
   };
 
   useEffect(() => {
     getImages();
-  });
+  }, []);
 
   return (
-    <div className='max-w-sm rounded overflow-hidden shadow-lg'>
-      <img src='https://source.unsplash.com/random' alt='' className='w-full' />
-      <div className='px-6 py-4'>
-        <div className='font-bold text-purple-500 text-xl mb2'>
-          Photo by John Doe
-        </div>
-        <ul>
-          <li>
-            <strong>Views: </strong>4000
-          </li>
-          <li>
-            <strong>Downloads: </strong>300
-          </li>
-          <li>
-            <strong>Likes: </strong>400
-          </li>
-        </ul>
+    <>
+      <div className='container mx-auto'>
+        {isLoading ? (
+          <h1 className='text-6xl text-center mx-auto mt-32'>loading...</h1>
+        ) : (
+          <div className='grid grid-cols-3 gap-4'>
+            {images.map(image => {
+              return <ImageCard key={image.id} image={image} />;
+            })}
+          </div>
+        )}
       </div>
-      <div className='px-6 py-4'>
-        <span className='inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2'>
-          tag #1
-        </span>
-        <span className='inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2'>
-          tag #2
-        </span>
-        <span className='inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2'>
-          tag #3
-        </span>
-      </div>
-    </div>
+    </>
   );
 }
 
