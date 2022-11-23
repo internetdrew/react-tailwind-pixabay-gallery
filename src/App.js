@@ -11,8 +11,8 @@ function App() {
     const res = await fetch(
       `https://pixabay.com/api/?key=${process.env.REACT_APP_PIXABAY_API_KEY}&q=${searchTerm}&image_type=photo&pretty=true`
     );
-    const { hits } = await res.json();
-    setImages(hits);
+    const { hits: fetchedImages } = await res.json();
+    setImages(fetchedImages);
     setIsLoading(false);
   };
 
